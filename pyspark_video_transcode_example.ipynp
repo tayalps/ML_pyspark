@@ -1,1 +1,24 @@
+# 1.Forge Pyspark: Prediction of transcoding time for videos
 
+*Input and output video characteristics along with their transcoding time and memory resource requirements while transcoding videos to different but valid formats. The goal here is to predict the transcoding time based on video features and allocated memory. A detailed explanation of the data can be found here* 
+1. Cluster: HDP1 (DEV) DB: 	hce_dev_xsbg_published_dstraining
+2. Train_Data_Table:  	training_transcoding (used to train and evaluate model)
+3. Test_Data_Table: 	test_transcoding  (true label are removed. You need to make prediction on this test data, and save the prediction result to result table)
+4. Result_Table:  	result_transcoding  (Put your own hid in column ‘user_id’)
+
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+from time import time
+%matplotlib inline
+
+## 1. Connect to pyspark
+
+from pyspark.sql import SparkSession
+from pyspark.conf import SparkConf
+spark = SparkSession.builder.config(conf=SparkConf()\
+                                    .setMaster("yarn")\
+                                    .setAppName("DominoPysparkTrain")\
+                                    .set("spark.executor.memory", '2g')\
+                                    .set('spark.executor.cores', '3')).getOrCreate()
